@@ -1,0 +1,28 @@
+{
+  "name": "soa-serializer",
+  "version": "0.0.1",
+  "description": "SoA serialization library",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "mocha ./**/*.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Web-ECS/SoA-serializer.git"
+  },
+  "keywords": [
+    "SoA",
+    "serialization",
+    "ECS"
+  ],
+  "author": "Nathaniel Martin",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/Web-ECS/SoA-serializer/issues"
+  },
+  "homepage": "https://github.com/Web-ECS/SoA-serializer#readme",
+  "devDependencies": {
+    "mocha": "^9.2.0"
+  }
+}
