@@ -69,8 +69,6 @@ assert(Transform.position.z[e] === 3) // true
 
 /* Delta Mode */
 
-const config = [Transform]
-
 // true value for second parameter enables delta mode (needed for both writer & reader)
 const writeDeltas = createDataWriter(config, true)
 const readDeltas = createDataReader(config, true)
@@ -106,5 +104,17 @@ readDeltas(data)
 assert(Transform.position.x[e] === 1) // true
 assert(Transform.position.y[e] === 2) // true
 assert(Transform.position.z[e] === 3) // true
+
+
+/* ID Mapping */
+
+const idMap = new Map([[0,12]])
+
+// this will write index 0 from the SoA object as index 12 in the binary data
+data = write([e], idMap)
+
+
+// this will read index 0 from the binary data to index 12 on the SoA object
+read(data, idMap)
 
 ```
