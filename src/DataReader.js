@@ -21,11 +21,11 @@ export const readComponent = (component, diff) => {
         : readUint64
 
   return (v, entity) => {
-    const changeMask = readChanged(v)
+    const changeMask = diff ? readChanged(v) : Number.MAX_SAFE_INTEGER
 
     for (let i = 0; i < props.length; i++) {
       // skip reading property if not in the change mask
-      if (!checkBitflag(changeMask, 1 << i)) {
+      if (diff && !checkBitflag(changeMask, 1 << i)) {
         continue
       }
       const prop = props[i]
@@ -51,10 +51,9 @@ export const readEntity = (componentReaders, diff) => {
   return (v, idMap) => {
     const id = readUint32(v)
     const entity = idMap ? idMap.get(id) : id
-    
     if (entity === undefined) throw new Error('entity not found in idMap')
 
-    const changeMask = readChanged(v)
+    const changeMask = diff ? readChanged(v) : Number.MAX_SAFE_INTEGER
 
     for (let i = 0; i < componentReaders.length; i++) {
       // skip reading component if not in the changeMask

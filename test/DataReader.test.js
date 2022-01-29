@@ -98,124 +98,23 @@ describe('AoS DataReader', () => {
     strictEqual(prop[entity], 1.5)
   })
 
-  it('should readEntity', () => {
-    const view = createViewCursor()
-    const entity = 1
+  describe('snapshot mode', () => {
 
-    const idMap = new Map([[entity,entity]])
-    
-    const [x, y, z] = [1.5, 2.5, 3.5]
-    Transform.position.x[entity] = x
-    Transform.position.y[entity] = y
-    Transform.position.z[entity] = z
-    Transform.rotation.x[entity] = x
-    Transform.rotation.y[entity] = y
-    Transform.rotation.z[entity] = z
+    it('should readEntity', () => {
+      const view = createViewCursor()
+      const entity = 1
 
-    writeEntity(componentWriters, true)(view, entity)
-
-    Transform.position.x[entity] = 0
-    Transform.position.y[entity] = 0
-    Transform.position.z[entity] = 0
-    Transform.rotation.x[entity] = 0
-    Transform.rotation.y[entity] = 0
-    Transform.rotation.z[entity] = 0
-
-    view.cursor = 0
-
-    readEntity(componentReaders, true)(view, idMap)
-
-    strictEqual(Transform.position.x[entity], x)
-    strictEqual(Transform.position.y[entity], y)
-    strictEqual(Transform.position.z[entity], z)
-    strictEqual(Transform.rotation.x[entity], x)
-    strictEqual(Transform.rotation.y[entity], y)
-    strictEqual(Transform.rotation.z[entity], z)
-
-    Transform.position.x[entity] = 0
-    Transform.rotation.z[entity] = 0
-
-    view.cursor = 0
-
-    writeEntity(componentWriters, true)(view, entity)
-
-    Transform.position.x[entity] = x
-    Transform.rotation.z[entity] = z
-
-    view.cursor = 0
-
-    readEntity(componentReaders, true)(view, idMap)
-
-    strictEqual(Transform.position.x[entity], 0)
-    strictEqual(Transform.position.y[entity], y)
-    strictEqual(Transform.position.z[entity], z)
-    strictEqual(Transform.rotation.x[entity], x)
-    strictEqual(Transform.rotation.y[entity], y)
-    strictEqual(Transform.rotation.z[entity], 0)
-
-  })
-
-  it('should readEntities', () => {
-    const view = createViewCursor()
-
-    const idMap = new Map()
-
-    const n = 5
-    const entities = Array(n).fill(0).map((_,i)=>i)
-
-    const [x, y, z] = [1.5, 2.5, 3.5]
-
-    entities.forEach(entity => {
-      Transform.position.x[entity] = x
-      Transform.position.y[entity] = y
-      Transform.position.z[entity] = z
-      Transform.rotation.x[entity] = x
-      Transform.rotation.y[entity] = y
-      Transform.rotation.z[entity] = z
-      idMap.set(entity, entity)
-    })
-
-    const entityWriter = createEntityWriter([Transform], true)
-    writeEntities(entityWriter, view, entities)
-
-    for (let i = 0; i < entities.length; i++) {
-      const entity = entities[i]
-
-      strictEqual(Transform.position.x[entity], x)
-      strictEqual(Transform.position.y[entity], y)
-      strictEqual(Transform.position.z[entity], z)
-      strictEqual(Transform.rotation.x[entity], x)
-      strictEqual(Transform.rotation.y[entity], y)
-      strictEqual(Transform.rotation.z[entity], z)
+      const idMap = new Map([[entity,entity]])
       
-    }
-
-  })
-
-  it('should createDataReader', () => {
-    const write = createDataWriter([Transform], true)
-
-    const idMap = new Map()
-
-    const n = 50
-    const entities = Array(n).fill(0).map((_,i)=>i)
-
-    const [x, y, z] = [1.5, 2.5, 3.5]
-
-    entities.forEach(entity => {
+      const [x, y, z] = [1.5, 2.5, 3.5]
       Transform.position.x[entity] = x
       Transform.position.y[entity] = y
       Transform.position.z[entity] = z
       Transform.rotation.x[entity] = x
       Transform.rotation.y[entity] = y
       Transform.rotation.z[entity] = z
-      idMap.set(entity, entity)
-    })
 
-    const packet = write(entities)
-
-    for (let i = 0; i < entities.length; i++) {
-      const entity = entities[i]
+      writeEntity(componentWriters)(view, entity)
 
       Transform.position.x[entity] = 0
       Transform.position.y[entity] = 0
@@ -223,21 +122,274 @@ describe('AoS DataReader', () => {
       Transform.rotation.x[entity] = 0
       Transform.rotation.y[entity] = 0
       Transform.rotation.z[entity] = 0
-    }
 
-    const read = createDataReader([Transform], true)
+      view.cursor = 0
 
-    read(packet, idMap)
+      readEntity(componentReaders)(view, idMap)
 
-    for (let i = 0; i < entities.length; i++) {
-      const entity = entities[i]
       strictEqual(Transform.position.x[entity], x)
       strictEqual(Transform.position.y[entity], y)
       strictEqual(Transform.position.z[entity], z)
       strictEqual(Transform.rotation.x[entity], x)
       strictEqual(Transform.rotation.y[entity], y)
       strictEqual(Transform.rotation.z[entity], z)
-    }
+
+      Transform.position.x[entity] = 0
+      Transform.rotation.z[entity] = 0
+
+      view.cursor = 0
+
+      writeEntity(componentWriters)(view, entity)
+
+      Transform.position.x[entity] = x
+      Transform.rotation.z[entity] = z
+
+      view.cursor = 0
+
+      readEntity(componentReaders)(view, idMap)
+
+      strictEqual(Transform.position.x[entity], 0)
+      strictEqual(Transform.position.y[entity], y)
+      strictEqual(Transform.position.z[entity], z)
+      strictEqual(Transform.rotation.x[entity], x)
+      strictEqual(Transform.rotation.y[entity], y)
+      strictEqual(Transform.rotation.z[entity], 0)
+
+    })
+
+    it('should readEntities', () => {
+      const view = createViewCursor()
+
+      const idMap = new Map()
+
+      const n = 5
+      const entities = Array(n).fill(0).map((_,i)=>i)
+
+      const [x, y, z] = [1.5, 2.5, 3.5]
+
+      entities.forEach(entity => {
+        Transform.position.x[entity] = x
+        Transform.position.y[entity] = y
+        Transform.position.z[entity] = z
+        Transform.rotation.x[entity] = x
+        Transform.rotation.y[entity] = y
+        Transform.rotation.z[entity] = z
+        idMap.set(entity, entity)
+      })
+
+      const entityWriter = createEntityWriter([Transform])
+      writeEntities(entityWriter, view, entities)
+
+      for (let i = 0; i < entities.length; i++) {
+        const entity = entities[i]
+
+        strictEqual(Transform.position.x[entity], x)
+        strictEqual(Transform.position.y[entity], y)
+        strictEqual(Transform.position.z[entity], z)
+        strictEqual(Transform.rotation.x[entity], x)
+        strictEqual(Transform.rotation.y[entity], y)
+        strictEqual(Transform.rotation.z[entity], z)
+        
+      }
+
+    })
+
+    it('should createDataReader', () => {
+      const write = createDataWriter([Transform])
+
+      const idMap = new Map()
+
+      const n = 5
+      const entities = Array(n).fill(0).map((_,i)=>i)
+      entities
+
+      const [x, y, z] = [1.5, 2.5, 3.5]
+
+      entities.forEach(entity => {
+        Transform.position.x[entity] = x
+        Transform.position.y[entity] = y
+        Transform.position.z[entity] = z
+        Transform.rotation.x[entity] = x
+        Transform.rotation.y[entity] = y
+        Transform.rotation.z[entity] = z
+        idMap.set(entity, entity)
+      })
+
+      const packet = write(entities)
+
+      for (let i = 0; i < entities.length; i++) {
+        const entity = entities[i]
+
+        Transform.position.x[entity] = 0
+        Transform.position.y[entity] = 0
+        Transform.position.z[entity] = 0
+        Transform.rotation.x[entity] = 0
+        Transform.rotation.y[entity] = 0
+        Transform.rotation.z[entity] = 0
+      }
+
+      const read = createDataReader([Transform])
+
+      read(packet, idMap)
+
+      for (let i = 0; i < entities.length; i++) {
+        const entity = entities[i]
+        strictEqual(Transform.position.x[entity], x)
+        strictEqual(Transform.position.y[entity], y)
+        strictEqual(Transform.position.z[entity], z)
+        strictEqual(Transform.rotation.x[entity], x)
+        strictEqual(Transform.rotation.y[entity], y)
+        strictEqual(Transform.rotation.z[entity], z)
+      }
+
+    })
+    
+  })
+
+  describe('delta mode', () => {
+
+    it('should readEntity', () => {
+      const view = createViewCursor()
+      const entity = 1
+
+      const idMap = new Map([[entity,entity]])
+      
+      const [x, y, z] = [1.5, 2.5, 3.5]
+      Transform.position.x[entity] = x
+      Transform.position.y[entity] = y
+      Transform.position.z[entity] = z
+      Transform.rotation.x[entity] = x
+      Transform.rotation.y[entity] = y
+      Transform.rotation.z[entity] = z
+
+      writeEntity(componentWriters, true)(view, entity)
+
+      Transform.position.x[entity] = 0
+      Transform.position.y[entity] = 0
+      Transform.position.z[entity] = 0
+      Transform.rotation.x[entity] = 0
+      Transform.rotation.y[entity] = 0
+      Transform.rotation.z[entity] = 0
+
+      view.cursor = 0
+
+      readEntity(componentReaders, true)(view, idMap)
+
+      strictEqual(Transform.position.x[entity], x)
+      strictEqual(Transform.position.y[entity], y)
+      strictEqual(Transform.position.z[entity], z)
+      strictEqual(Transform.rotation.x[entity], x)
+      strictEqual(Transform.rotation.y[entity], y)
+      strictEqual(Transform.rotation.z[entity], z)
+
+      Transform.position.x[entity] = 0
+      Transform.rotation.z[entity] = 0
+
+      view.cursor = 0
+
+      writeEntity(componentWriters, true)(view, entity)
+
+      Transform.position.x[entity] = x
+      Transform.rotation.z[entity] = z
+
+      view.cursor = 0
+
+      readEntity(componentReaders, true)(view, idMap)
+
+      strictEqual(Transform.position.x[entity], 0)
+      strictEqual(Transform.position.y[entity], y)
+      strictEqual(Transform.position.z[entity], z)
+      strictEqual(Transform.rotation.x[entity], x)
+      strictEqual(Transform.rotation.y[entity], y)
+      strictEqual(Transform.rotation.z[entity], 0)
+
+    })
+
+    it('should readEntities', () => {
+      const view = createViewCursor()
+
+      const idMap = new Map()
+
+      const n = 5
+      const entities = Array(n).fill(0).map((_,i)=>i)
+
+      const [x, y, z] = [1.5, 2.5, 3.5]
+
+      entities.forEach(entity => {
+        Transform.position.x[entity] = x
+        Transform.position.y[entity] = y
+        Transform.position.z[entity] = z
+        Transform.rotation.x[entity] = x
+        Transform.rotation.y[entity] = y
+        Transform.rotation.z[entity] = z
+        idMap.set(entity, entity)
+      })
+
+      const entityWriter = createEntityWriter([Transform], true)
+      writeEntities(entityWriter, view, entities)
+
+      for (let i = 0; i < entities.length; i++) {
+        const entity = entities[i]
+
+        strictEqual(Transform.position.x[entity], x)
+        strictEqual(Transform.position.y[entity], y)
+        strictEqual(Transform.position.z[entity], z)
+        strictEqual(Transform.rotation.x[entity], x)
+        strictEqual(Transform.rotation.y[entity], y)
+        strictEqual(Transform.rotation.z[entity], z)
+        
+      }
+
+    })
+
+    it('should createDataReader', () => {
+      const write = createDataWriter([Transform], true)
+
+      const idMap = new Map()
+
+      const n = 50
+      const entities = Array(n).fill(0).map((_,i)=>i)
+
+      const [x, y, z] = [1.5, 2.5, 3.5]
+
+      entities.forEach(entity => {
+        Transform.position.x[entity] = x
+        Transform.position.y[entity] = y
+        Transform.position.z[entity] = z
+        Transform.rotation.x[entity] = x
+        Transform.rotation.y[entity] = y
+        Transform.rotation.z[entity] = z
+        idMap.set(entity, entity)
+      })
+
+      const packet = write(entities)
+
+      for (let i = 0; i < entities.length; i++) {
+        const entity = entities[i]
+
+        Transform.position.x[entity] = 0
+        Transform.position.y[entity] = 0
+        Transform.position.z[entity] = 0
+        Transform.rotation.x[entity] = 0
+        Transform.rotation.y[entity] = 0
+        Transform.rotation.z[entity] = 0
+      }
+
+      const read = createDataReader([Transform], true)
+
+      read(packet, idMap)
+
+      for (let i = 0; i < entities.length; i++) {
+        const entity = entities[i]
+        strictEqual(Transform.position.x[entity], x)
+        strictEqual(Transform.position.y[entity], y)
+        strictEqual(Transform.position.z[entity], z)
+        strictEqual(Transform.rotation.x[entity], x)
+        strictEqual(Transform.rotation.y[entity], y)
+        strictEqual(Transform.rotation.z[entity], z)
+      }
+
+    })
 
   })
 
