@@ -4,12 +4,12 @@ A zero-dependency serialization library for Structure of Array objects.
 
 ## Features
 
-- DataWriter: Serializes data from SoA object(s) to binary data using an array of indices
-- DataReader: Deserializes from binary data to SoA object(s)
+- DataWriter: Serializes data from SoA object(s) to binary data provided array of indices to extract data from
+- DataReader: Deserializes from binary data to SoA object(s) to the appropriate indices
 - Binary data packed in an AoS-like format for optimal space efficiency
 - ID mapping included for reading/writing data from/to different sets of indices
 - Includes snapshot and delta modes
-  - Snapshot mode serializes the entire state
+  - Snapshot mode serializes the entire state (default)
   - Delta mode only serializes state that has changed since the last serialization call
 
 ## Example
