@@ -58,7 +58,7 @@ export const readEntity = (componentReaders, diff) => {
 
     for (let i = 0; i < componentReaders.length; i++) {
       // skip reading component if not in the changeMask
-      if (!checkBitflag(changeMask, 1 << i)) {
+      if (diff && !checkBitflag(changeMask, 1 << i)) {
         continue
       }
       const read = componentReaders[i]
