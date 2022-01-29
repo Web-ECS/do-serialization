@@ -1,4 +1,4 @@
-# SoA Serializer
+# SoA Serialization
 
 A zero-dependency serialization library for Structure of Array objects.
 
@@ -16,7 +16,7 @@ A zero-dependency serialization library for Structure of Array objects.
 
 ```js
 import assert from 'assert'
-import { createDataWriter, createDataReader } from '@webecs/soa-serializer'
+import { createDataWriter, createDataReader } from '@webecs/soa-serialization'
 
 /* SoA Object */
 
