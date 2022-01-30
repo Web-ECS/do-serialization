@@ -3,6 +3,10 @@ import { createViewCursor, readProp, readUint8, readUint16, readUint32, readUint
 
 export const checkBitflag = (changeMask, flag) => (changeMask & flag) === flag
 
+export const readComponentProp = (v, prop, entity) => {
+  prop[entity] = readProp(v, prop)
+}
+
 /**
  * Reads a component dynamically
  * (less efficient than statically due to inner loop)
@@ -28,17 +32,10 @@ export const readComponent = (component, diff) => {
       if (diff && !checkBitflag(changeMask, 1 << i)) {
         continue
       }
-      const prop = props[i]
-      const val = readProp(v, prop)
-      prop[entity] = val
+      readComponentProp(v, props[i], entity)
     }
   }
 }
-
-export const readComponentProp = (v, prop, entity) => {
-  prop[entity] = readProp(v, prop)
-}
-
 export const readEntity = (componentReaders, diff) => {
   const readChanged = componentReaders.length <= 8
     ? readUint8

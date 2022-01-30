@@ -18,10 +18,6 @@ const Transform = {
   },
 }
 
-const componentReaders = [readComponent(Transform)]
-const componentWriters = [writeComponent(Transform, true)]
-
-const writePosition = writeComponent(Transform.position, true)
 
 describe('AoS DataReader', () => {
 
@@ -33,50 +29,6 @@ describe('AoS DataReader', () => {
     strictEqual(checkBitflag(mask, A), true)
     strictEqual(checkBitflag(mask, B), false)
     strictEqual(checkBitflag(mask, C), true)
-  })
-
-  it('should readComponent Transform.position', () => {
-    const view = createViewCursor()
-    const entity = 1
-
-    const [x, y, z] = [1.5, 2.5, 3.5]
-    Transform.position.x[entity] = x
-    Transform.position.y[entity] = y
-    Transform.position.z[entity] = z
-
-    writePosition(view, entity)
-
-    Transform.position.x[entity] = 0
-    Transform.position.y[entity] = 0
-    Transform.position.z[entity] = 0
-
-    view.cursor = 0
-
-    const readPosition = readComponent(Transform.position)
-
-    readPosition(view, entity)
-
-    strictEqual(Transform.position.x[entity], x)
-    strictEqual(Transform.position.y[entity], y)
-    strictEqual(Transform.position.z[entity], z)
-
-    Transform.position.x[entity] = 10.5
-    Transform.position.z[entity] = 11.5
-
-    const rewind = view.cursor
-
-    writePosition(view, entity)
-
-    Transform.position.x[entity] = 5.5
-    Transform.position.z[entity] = 6.5
-
-    view.cursor = rewind
-
-    readPosition(view, entity)
-
-    strictEqual(Transform.position.x[entity], 10.5)
-    strictEqual(Transform.position.y[entity], y)
-    strictEqual(Transform.position.z[entity], 11.5)
   })
 
   it('should readComponentProp', () => {
@@ -100,7 +52,56 @@ describe('AoS DataReader', () => {
 
   describe('snapshot mode', () => {
 
+    it('should readComponent Transform.position', () => {
+      const writePosition = writeComponent(Transform.position)
+
+      const view = createViewCursor()
+      const entity = 1
+  
+      const [x, y, z] = [1.5, 2.5, 3.5]
+      Transform.position.x[entity] = x
+      Transform.position.y[entity] = y
+      Transform.position.z[entity] = z
+  
+      writePosition(view, entity)
+  
+      Transform.position.x[entity] = 0
+      Transform.position.y[entity] = 0
+      Transform.position.z[entity] = 0
+  
+      view.cursor = 0
+  
+      const readPosition = readComponent(Transform.position)
+  
+      readPosition(view, entity)
+  
+      strictEqual(Transform.position.x[entity], x)
+      strictEqual(Transform.position.y[entity], y)
+      strictEqual(Transform.position.z[entity], z)
+  
+      Transform.position.x[entity] = 10.5
+      Transform.position.z[entity] = 11.5
+  
+      const rewind = view.cursor
+  
+      writePosition(view, entity)
+  
+      Transform.position.x[entity] = 5.5
+      Transform.position.z[entity] = 6.5
+  
+      view.cursor = rewind
+  
+      readPosition(view, entity)
+  
+      strictEqual(Transform.position.x[entity], 10.5)
+      strictEqual(Transform.position.y[entity], y)
+      strictEqual(Transform.position.z[entity], 11.5)
+    })
+
     it('should readEntity', () => {
+      const componentReaders = [readComponent(Transform)]
+      const componentWriters = [writeComponent(Transform)]
+
       const view = createViewCursor()
       const entity = 1
 
@@ -248,7 +249,54 @@ describe('AoS DataReader', () => {
 
   describe('delta mode', () => {
 
+    it('should readComponent Transform.position', () => {
+      const writePosition = writeComponent(Transform.position, true)
+      const view = createViewCursor()
+      const entity = 1
+  
+      const [x, y, z] = [1.5, 2.5, 3.5]
+      Transform.position.x[entity] = x
+      Transform.position.y[entity] = y
+      Transform.position.z[entity] = z
+  
+      writePosition(view, entity)
+  
+      Transform.position.x[entity] = 0
+      Transform.position.y[entity] = 0
+      Transform.position.z[entity] = 0
+  
+      view.cursor = 0
+  
+      const readPosition = readComponent(Transform.position, true)
+  
+      readPosition(view, entity)
+  
+      strictEqual(Transform.position.x[entity], x)
+      strictEqual(Transform.position.y[entity], y)
+      strictEqual(Transform.position.z[entity], z)
+  
+      Transform.position.x[entity] = 10.5
+      Transform.position.z[entity] = 11.5
+  
+      const rewind = view.cursor
+  
+      writePosition(view, entity)
+  
+      Transform.position.x[entity] = 5.5
+      Transform.position.z[entity] = 6.5
+  
+      view.cursor = rewind
+  
+      readPosition(view, entity)
+  
+      strictEqual(Transform.position.x[entity], 10.5)
+      strictEqual(Transform.position.y[entity], y)
+      strictEqual(Transform.position.z[entity], 11.5)
+    })
+
     it('should readEntity', () => {
+      const componentReaders = [readComponent(Transform, true)]
+      const componentWriters = [writeComponent(Transform, true)]
       const view = createViewCursor()
       const entity = 1
 
