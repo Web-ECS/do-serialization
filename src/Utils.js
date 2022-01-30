@@ -25,8 +25,6 @@ const memoize = (fn) => {
 export const flatten = memoize((component) =>
   // get all props on component
   Object.keys(component)
-    // filter out "private" props
-    .filter((p) => p[0] !== '_')
     .sort()
     // flatMap props to
     .flatMap((p) => {
