@@ -36,9 +36,13 @@ const Transform = {
 }
 
 
-/* Snapshot Mode */
+/* Config */
 
+// a simple array of SoA objects acts as the configuration
 const config = [Transform]
+
+
+/* Snapshot Mode */
 
 // DataWriter and DataReader must have the same config in order to function correctly
 const write = createDataWriter(config)
