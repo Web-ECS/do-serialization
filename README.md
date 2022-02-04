@@ -1,6 +1,6 @@
-# SoA Serialization
+# Data-oriented Serialization for SoA/AoS
 
-A zero-dependency serialization library for Structure of Array objects.
+A zero-dependency serialization library for data-oriented design structures like SoA (Structure of Arrays) and AoS (Array of Structures).
 
 ## Features
 
