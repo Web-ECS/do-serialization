@@ -12,6 +12,13 @@ A zero-dependency serialization library for data-oriented design structures like
   - Snapshot mode serializes the entire state (default)
   - Delta mode only serializes state that has changed since the last serialization call
 
+## Planned
+
+- Support for AoS object serialization
+- More flexible API
+  - Schemas
+  - Ability to pass in ArrayBuffers to write to
+
 ## Example
 
 ```js
