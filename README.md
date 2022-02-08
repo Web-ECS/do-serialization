@@ -1,6 +1,6 @@
-# Data-oriented Serialization for SoA/AoS
+# Data-oriented Serialization for SoA/AoA
 
-A zero-dependency serialization library for data-oriented design structures like SoA (Structure of Arrays) and AoS (Array of Structures).
+A zero-dependency serialization library for data-oriented design structures like SoA (Structure of Arrays) and AoA (Array of Arrays).
 
 ## Features
 
@@ -14,7 +14,7 @@ A zero-dependency serialization library for data-oriented design structures like
 
 ## Planned
 
-- Support for AoS object serialization
+- Support for AoA serialization
 - More flexible API
   - Schemas
   - Ability to pass in ArrayBuffers to write to
@@ -23,7 +23,7 @@ A zero-dependency serialization library for data-oriented design structures like
 
 ```js
 import assert from 'assert'
-import { createDataWriter, createDataReader } from '@webecs/soa-serialization'
+import { createDataWriter, createDataReader } from '@webecs/do-serialization'
 
 /* SoA Object */
 
